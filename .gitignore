@@ -1,0 +1,4 @@
+*.vcf
+
+# Visual Studio Code
+.vscode/
