@@ -1,14 +1,28 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
-
 # Clean Contacts
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
 
 Do not want to share all your contact info to mobile apps? This software is for you!
 
 Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and telephones.
 
+## Installation
+
+If you have golang 1.17+ installed:
+
+```sh
+go install github.com/staticdev/cleancontacts
+```
+
 ## Usage
 
-TODO
+Run on command prompt:
+
+```sh
+cleancontacts contacts.vcf
+# or full path
+cleancontacts /Downloads/contacts.vcf
+```
 
 ## License
 
