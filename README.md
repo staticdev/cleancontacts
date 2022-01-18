@@ -1,6 +1,6 @@
 # Clean Contacts
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
+[![Go Reference](https://pkg.go.dev/badge/github.com/staticdev/cleancontacts.svg)](https://pkg.go.dev/github.com/staticdev/cleancontacts) [![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
 
 Do not want to share all your contact info to mobile apps? This software is for you!
 
