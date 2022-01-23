@@ -1,10 +1,17 @@
-/*
-Copyright © 2022 staticdev
-*/
 package main
 
-import "github.com/staticdev/cleancontacts/cmd"
+import (
+	"log"
+	"os"
+
+	"github.com/staticdev/cleancontacts/cmd"
+)
 
 func main() {
-	cmd.Execute()
+	command, file := cmd.RootCmd()
+	err := cmd.Execute(command, file)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
 }

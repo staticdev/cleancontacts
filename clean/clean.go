@@ -2,10 +2,9 @@ package clean
 
 import (
 	"io"
+	"io/fs"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/emersion/go-vcard"
 )
@@ -16,27 +15,12 @@ func handleError(err error) {
 	}
 }
 
-func GetOutputPath(fileName, fileExtension string) string {
-	return strings.TrimSuffix(filepath.Base(fileName), fileExtension) + "_cleaned" + fileExtension
-}
-
-func FileExists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return false, err
-}
-
-func Run(fileIn, fileOut string) {
-	in, err := os.Open(fileIn)
+func Run(fileSystem fs.FS, fileNameIn, filePathOut string) {
+	in, err := fileSystem.Open(fileNameIn)
 	handleError(err)
 	defer in.Close()
 
-	out, err := os.Create(fileOut)
+	out, err := os.Create(filePathOut)
 	handleError(err)
 	defer out.Close()
 
