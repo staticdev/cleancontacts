@@ -1,6 +1,6 @@
 # Clean Contacts
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/staticdev/cleancontacts.svg)](https://pkg.go.dev/github.com/staticdev/cleancontacts) [![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
+[![Tests](https://github.com/staticdev/cleancontacts/workflows/Tests/badge.svg)](https://github.com/staticdev/cleancontacts/actions?workflow=Tests) [![Codecov](https://codecov.io/gh/staticdev/cleancontacts/branch/main/graph/badge.svg)](https://codecov.io/gh/staticdev/cleancontacts) [![Go Reference](https://pkg.go.dev/badge/github.com/staticdev/cleancontacts.svg)](https://pkg.go.dev/github.com/staticdev/cleancontacts) [![Go Report Card](https://goreportcard.com/badge/github.com/staticdev/cleancontacts)](https://goreportcard.com/report/github.com/staticdev/cleancontacts)
 
 Do not want to share all your contact info to mobile apps? This software is for you!
 
