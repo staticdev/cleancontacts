@@ -8,7 +8,9 @@ Export your contacts in VCard format and run the program. BANG! You have a new V
 
 ## Installation
 
-If you have golang 1.17+ installed:
+Download the relevant binary on Assets of latest [release](https://github.com/staticdev/cleancontacts/releases).
+
+Alternatively, if you have golang 1.17+ installed:
 
 ```sh
 go install github.com/staticdev/cleancontacts
