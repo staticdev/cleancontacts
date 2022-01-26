@@ -26,6 +26,8 @@ cleancontacts contacts.vcf
 cleancontacts /Downloads/contacts.vcf
 ```
 
+It generates a new cleaned contact file with the name original_name**_cleaned**.vcf.
+
 ## License
 
 Distributed under the terms of the [MIT license](LICENSE.md), Clean Contacts is free and open source software.
