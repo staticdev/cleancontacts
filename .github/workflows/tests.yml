@@ -15,6 +15,7 @@ jobs:
         include:
           - { go: "1.17", os: "ubuntu-latest" }
           - { go: "1.17", os: "macos-latest" }
+          - { go: "1.17", os: "windows-latest" }
 
     steps:
       - name: Check out the repository

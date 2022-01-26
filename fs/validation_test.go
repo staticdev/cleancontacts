@@ -7,8 +7,10 @@ import (
 
 var (
 	fakeFS = fstest.MapFS{
-		"readme.md":          {},
-		"dirty-contacts.vcf": {},
+		"readme.md":              {},
+		"dirty-contacts.vcf":     {},
+		"secret-folder":          {Mode: 0000},
+		"secret-folder/cont.vcf": {},
 	}
 )
 
@@ -41,3 +43,15 @@ func TestFileValidInexistingFile(t *testing.T) {
 		t.Errorf("want %q, nil got %q, %v", wantOut, out, err)
 	}
 }
+
+// See issue: https://github.com/golang/go/issues/50787
+// func TestFileValidPermissionDenied(t *testing.T) {
+// 	fileName := "cont.vcf"
+// 	fsys, _ := fs.Sub(fakeFS, "secret-folder")
+// 	wantOut := ""
+
+// 	out, err := FileValid(fsys, fileName)
+// 	if out != wantOut || err == nil {
+// 		t.Errorf("want %q, nil got %q, %v", wantOut, out, err)
+// 	}
+// }
