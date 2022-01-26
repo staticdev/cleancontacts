@@ -30,7 +30,7 @@ Export your contacts in VCard format and run the program. BANG! You have a new V
 		},
 		Example: `cleancontacts contacts.vcf
 cleancontacts /path/contacts.vcf`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Println(file)
 			var filePath string
 
@@ -44,11 +44,12 @@ cleancontacts /path/contacts.vcf`,
 			fsys := os.DirFS(dir)
 			fileNameOut, err := fs.FileValid(fsys, fileName)
 			if err != nil {
-				return
+				return err
 			}
 			filePathOut := filepath.Join(dir, fileNameOut)
 
 			clean.Run(fsys, fileName, filePathOut)
+			return nil
 		},
 	}
 	return cmd, file
