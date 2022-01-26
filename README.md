@@ -26,7 +26,7 @@ cleancontacts contacts.vcf
 cleancontacts /Downloads/contacts.vcf
 ```
 
-It generates a new cleaned contact file with the name original_name**_cleaned**.vcf.
+It generates a new cleaned contact file with the name original_name*_cleaned*.vcf.
 
 ## License
 
