@@ -1,3 +1,4 @@
+---
 builds:
   - env:
       - CGO_ENABLED=0
@@ -5,6 +6,13 @@ builds:
       - linux
       - windows
       - darwin
+nfpms:
+  - maintainer: staticdev <staticdev-support@protonmail.com>
+    license: "MIT"
+    description: Cleanup your phone contacts to prevent apps for having access to all details of your contacts.
+    formats:
+    - deb
+    - rpm
 archives:
   - format: zip
     replacements:
