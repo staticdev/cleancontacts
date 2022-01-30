@@ -21,7 +21,7 @@ func RootCmd() (rootCmd *cobra.Command, fileName string) {
 		Long: `Do not want to share all your contact info to mobile apps? This software is for you!
 
 Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and telephones.`,
-		Version: "0.2.0",
+		Version: "0.2.1",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if file == "" && len(args) < 1 {
 				return errors.New("needs 1 arg")
