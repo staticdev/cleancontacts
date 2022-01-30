@@ -3,12 +3,12 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/staticdev/cleancontacts/clean"
 	"github.com/staticdev/cleancontacts/fs"
 
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +41,7 @@ cleancontacts /path/contacts.vcf`,
 			}
 
 			dir, fileName := filepath.Split(filePath)
-			fsys := os.DirFS(dir)
+			fsys := afero.NewOsFs()
 			fileNameOut, err := fs.FileValid(fsys, fileName)
 			if err != nil {
 				return err

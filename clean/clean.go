@@ -2,11 +2,10 @@ package clean
 
 import (
 	"io"
-	"io/fs"
 	"log"
-	"os"
 
 	"github.com/emersion/go-vcard"
+	"github.com/spf13/afero"
 )
 
 func handleError(err error) {
@@ -15,12 +14,12 @@ func handleError(err error) {
 	}
 }
 
-func Run(fileSystem fs.FS, fileNameIn, filePathOut string) {
+func Run(fileSystem afero.Fs, fileNameIn, filePathOut string) {
 	in, err := fileSystem.Open(fileNameIn)
 	handleError(err)
 	defer in.Close()
 
-	out, err := os.Create(filePathOut)
+	out, err := fileSystem.Create(filePathOut)
 	handleError(err)
 	defer out.Close()
 

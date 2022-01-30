@@ -2,14 +2,15 @@ package fs
 
 import (
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/spf13/afero"
 )
 
-func fileExists(fileSystem fs.FS, fileName string) (bool, error) {
-	_, err := fs.Stat(fileSystem, fileName)
+func fileExists(fileSystem afero.Fs, fileName string) (bool, error) {
+	_, err := fileSystem.Stat(fileName)
 	if err == nil {
 		return true, nil
 	}
@@ -23,7 +24,7 @@ func getOutputFileName(fileName, fileExtension string) string {
 	return strings.TrimSuffix(filepath.Base(fileName), fileExtension) + "_cleaned" + fileExtension
 }
 
-func FileValid(fileSystem fs.FS, fileName string) (string, error) {
+func FileValid(fileSystem afero.Fs, fileName string) (string, error) {
 	fileExists, err := fileExists(fileSystem, fileName)
 	if !fileExists || err != nil {
 		return "", err
