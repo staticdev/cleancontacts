@@ -34,12 +34,13 @@ func Run(fileSystem afero.Fs, fileNameIn, filePathOut string) {
 		}
 
 		var ns = card.Values("N")
-		if len(ns) == 0 {
+		var tels = card.Values("TEL")
+		// skip contacts with no name or tel
+		if len(ns) == 0 || len(tels) == 0 {
 			continue
 		}
 		var versions = card.Values("VERSION")
 		var fns = card.Values("FN")
-		var tels = card.Values("TEL")
 		var cleanCard vcard.Card = make(vcard.Card)
 		for _, version := range versions {
 			cleanCard.AddValue("VERSION", version)
