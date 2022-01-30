@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"runtime"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -56,6 +57,10 @@ func TestFileValidInexistingFile(t *testing.T) {
 }
 
 func TestFileValidPermissionDenied(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skipf("Unix based only")
+	}
+
 	folderName := "secret"
 	fileName := "secret/cont.vcf"
 	err := FakeFS.Mkdir(folderName, 0700) // temporary permission to write
