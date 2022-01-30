@@ -8,19 +8,6 @@ import (
 
 var DirtyCard = `BEGIN:VCARD
 VERSION:3.0
-FN:Alcione Marques Dos Santos
-N:Santos;Alcione Marques;Dos;;
-item1.EMAIL;TYPE=INTERNET:alcimarque32@gmail.com
-item1.X-ABLabel:
-item2.EMAIL;TYPE=INTERNET:alcimarques32@hotmail.com
-item2.X-ABLabel:
-TEL;TYPE=CELL:+55 31984136833
-item3.ADR:;;991 Avenida Mauro Nunes Moreira;;Ibirité - MG;;BR;991 Avenida M
-auro Nunes Moreira\nIbirité - MG\nBR
-item3.X-ABLabel:
-NOTE:CPF\: 039377886-03\n\nDados bancários\:\nBanco Santander\nAg\: 4177\nC
-ta\: 1065478-0
-CATEGORIES:myContacts
 END:VCARD`
 var FakeFS = afero.NewMemMapFs()
 
