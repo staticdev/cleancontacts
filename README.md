@@ -4,7 +4,7 @@
 
 Do not want to share all your contact info to mobile apps? This software is for you!
 
-Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and telephones.
+Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and phone numbers.
 
 ## Installation
 
@@ -18,15 +18,19 @@ go install github.com/staticdev/cleancontacts
 
 ## Usage
 
+Go to your contacts provider and export your contacts in VCard format. The you will have a contacts file with extension `.vcf`.
+
 Run on command prompt:
 
 ```sh
-cleancontacts contacts.vcf
+cleancontacts ContactsFilename.vcf
 # or full path
-cleancontacts /Downloads/contacts.vcf
+cleancontacts /Downloads/ContactsFilename.vcf
 ```
 
-It generates a new cleaned contact file with the name OriginalName_cleaned.vcf.
+It generates a new cleaned contact file with the name ContactsFilename_cleaned.vcf.
+
+Next step would be stop syncing your contacts on your phone, delete all contacts and import the cleaned contacts. This will prevent all apps from getting extra information other than contact names and phone numbers.
 
 ## License
 
