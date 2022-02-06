@@ -2,59 +2,51 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"path/filepath"
-
-	"github.com/staticdev/cleancontacts/clean"
-	"github.com/staticdev/cleancontacts/fs"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
-func RootCmd() (rootCmd *cobra.Command, fileName string) {
-	var file string
+type fileIoer interface {
+	GetOutputFileName(afero.Fs, string) (string, error)
+}
 
+type contactCleaner interface {
+	ContactClean(afero.Fs, string, string)
+}
+
+func RootCmd(fileIo fileIoer, contactClean contactCleaner) (rootCmd *cobra.Command) {
 	cmd := &cobra.Command{
 		Use:   "cleancontacts <filepath>.vcf",
 		Short: "Cleanup your phone contacts to prevent apps for having access to all details of your contacts.",
 		Long: `Do not want to share all your contact info to mobile apps? This software is for you!
 
 Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and telephones.`,
-		Version: "0.2.1",
-		Args: func(cmd *cobra.Command, args []string) error {
-			if file == "" && len(args) < 1 {
-				return errors.New("needs 1 arg")
-			}
-			return nil
-		},
+		Version: "0.2.2",
 		Example: `cleancontacts contacts.vcf
 cleancontacts /path/contacts.vcf`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Println(file)
-			var filePath string
-
-			if file != "" {
-				filePath = file
-			} else {
-				filePath = args[0]
+			if len(args) != 1 {
+				return errors.New("Contact file argument not provided.")
 			}
+			filePath := args[0]
 
 			dir, fileName := filepath.Split(filePath)
 			fsys := afero.NewOsFs()
-			fileNameOut, err := fs.FileValid(fsys, fileName)
+			fileNameOut, err := fileIo.GetOutputFileName(fsys, fileName)
 			if err != nil {
 				return err
 			}
 			filePathOut := filepath.Join(dir, fileNameOut)
 
-			clean.Run(fsys, fileName, filePathOut)
+			contactClean.ContactClean(fsys, fileName, filePathOut)
 			return nil
 		},
 	}
-	return cmd, file
+	return cmd
 }
 
-func Execute(cmd *cobra.Command, file string) error {
+func Execute(cmd *cobra.Command) error {
 	return cmd.Execute()
 }

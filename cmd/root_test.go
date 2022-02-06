@@ -1,27 +1,47 @@
-package cmd
+package cmd_test
 
 import (
-	"fmt"
-	"io/fs"
+	"errors"
 	"testing"
-	"testing/fstest"
+
+	"github.com/spf13/afero"
+	"github.com/staticdev/cleancontacts/cmd"
 )
 
-var (
-	fakeFS = fstest.MapFS{
-		"root-folder":                    {Mode: fs.ModeDir},
-		"root-folder/file-1.md":          {Data: []byte("Wrong format file")},
-		"root-folder/dirty-contacts.vcf": {},
-	}
-)
+type FakeFileIO struct{}
 
-// https://dev.to/albertodeago88/learn-golang-basics-by-creating-a-file-counter-50f1
-// tests := []struct {
-//     args     []string
-//     function func() func(cmd *cobra.Command, args []string) error
-//     output   string
-// }
+func (FakeFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
+	return "", nil
+}
+
+type FakeClean struct{}
+
+func (FakeClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {}
 
 func TestExecute(t *testing.T) {
-	fmt.Print(fakeFS)
+	testCases := []struct {
+		name        string
+		args        []string
+		expectedErr error
+	}{
+		{
+			name: "happy-path",
+			args: []string{"contacts.vcf"},
+		},
+		// TODO: fix this test and add clean error testcase
+		// {
+		// 	name:        "no-args",
+		// 	expectedErr: errors.New("Contact file argument not provided."),
+		// },
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			root := cmd.RootCmd(FakeFileIO{}, FakeClean{})
+			root.SetArgs(tc.args)
+			err := cmd.Execute(root)
+			if !errors.Is(err, tc.expectedErr) {
+				t.Errorf("want (%v) got (%v)", tc.expectedErr, err)
+			}
+		})
+	}
 }
