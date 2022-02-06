@@ -9,30 +9,49 @@ import (
 	"github.com/spf13/afero"
 )
 
+type ValidationError struct {
+	Msg string
+}
+
+func (v ValidationError) Error() string {
+	return v.Msg
+}
+
+type FileIO struct{}
+
 func fileExists(fileSystem afero.Fs, fileName string) (bool, error) {
 	_, err := fileSystem.Stat(fileName)
 	if err == nil {
 		return true, nil
 	}
 	if os.IsNotExist(err) {
-		return false, fmt.Errorf("File %q does not exist.", fileName)
+		return false, ValidationError{Msg: fmt.Sprintf("File %q does not exist.", fileName)}
 	}
 	return false, err
+}
+
+func validExtension(gotExtension string) error {
+	wantExtension := ".vcf"
+	if gotExtension != wantExtension {
+		return ValidationError{Msg: fmt.Sprintf("Extension %q not accepted, please use a %q file.", gotExtension, wantExtension)}
+	}
+	return nil
 }
 
 func getOutputFileName(fileName, fileExtension string) string {
 	return strings.TrimSuffix(filepath.Base(fileName), fileExtension) + "_cleaned" + fileExtension
 }
 
-func FileValid(fileSystem afero.Fs, fileName string) (string, error) {
+func (FileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
 	fileExists, err := fileExists(fileSystem, fileName)
 	if !fileExists || err != nil {
 		return "", err
 	}
 
 	fileExtension := filepath.Ext(fileName)
-	if fileExtension != ".vcf" {
-		return "", fmt.Errorf("Extension %v not accepted. Please use a .vcf file.", fileExtension)
+	err = validExtension(fileExtension)
+	if err != nil {
+		return "", err
 	}
 
 	outFileName := getOutputFileName(fileName, fileExtension)

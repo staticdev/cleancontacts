@@ -1,16 +1,25 @@
-package clean
+package clean_test
 
 import (
 	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
+	"github.com/staticdev/cleancontacts/clean"
 )
 
+var Clean = clean.Clean{}
 var FakeFS = afero.NewMemMapFs()
 
-func TestRun(t *testing.T) {
-	var dirtyCard = `BEGIN:VCARD
+func TestClean(t *testing.T) {
+	testCases := []struct {
+		name    string
+		contact string
+		want    string
+	}{
+		{
+			name: "happy-path",
+			contact: `BEGIN:VCARD
 VERSION:3.0
 FN:This Is A Full Name
 N:Name;This is A;Full;;
@@ -22,29 +31,18 @@ item3.X-ABLabel:
 NOTE:Some notes\n\nmore notes
 CATEGORIES:myContacts
 END:VCARD
-`
-	fileNameIn := "dirty-contact.vcf"
-	filePathOut := "./dirty-contact_cleaned.vcf"
-	wantOut := `BEGIN:VCARD
+`,
+			want: `BEGIN:VCARD
 VERSION:3.0
 FN:This Is A Full Name
 N:Name;This is A;Full;;
 TEL:+40 547984080
 END:VCARD
-`
-
-	afero.WriteFile(FakeFS, fileNameIn, []byte(dirtyCard), 0600)
-
-	Run(FakeFS, fileNameIn, filePathOut)
-	out, err := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
-	outStr := strings.Replace(string(out), "\r\n", "\n", -1)
-	if outStr != wantOut || err != nil {
-		t.Errorf("want %q, nil got %q, %v", wantOut, outStr, err)
-	}
-}
-
-func TestRunSkipNoTel(t *testing.T) {
-	var dirtyCard = `BEGIN:VCARD
+`,
+		},
+		{
+			name: "skip-no-tel",
+			contact: `BEGIN:VCARD
 VERSION:3.0
 FN:This Is A Full Name
 N:Name;This is A;Full;;
@@ -55,17 +53,22 @@ item3.X-ABLabel:
 NOTE:Some notes\n\nmore notes
 CATEGORIES:myContacts
 END:VCARD
-`
-	fileNameIn := "dirty-contact.vcf"
+`,
+			want: ``,
+		},
+	}
+	fileNameIn := "dirty-contacts.vcf"
 	filePathOut := "./dirty-contact_cleaned.vcf"
-	wantOut := ``
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0600)
 
-	afero.WriteFile(FakeFS, fileNameIn, []byte(dirtyCard), 0600)
-
-	Run(FakeFS, fileNameIn, filePathOut)
-	out, err := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
-	outStr := strings.Replace(string(out), "\r\n", "\n", -1)
-	if outStr != wantOut || err != nil {
-		t.Errorf("want %q, nil got %q, %v", wantOut, outStr, err)
+			Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
+			out, _ := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
+			outStr := strings.Replace(string(out), "\r\n", "\n", -1)
+			if outStr != tc.want {
+				t.Errorf("want (%q), got (%q)", tc.want, outStr)
+			}
+		})
 	}
 }

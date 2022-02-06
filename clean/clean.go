@@ -8,13 +8,15 @@ import (
 	"github.com/spf13/afero"
 )
 
+type Clean struct{}
+
 func handleError(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Run(fileSystem afero.Fs, fileNameIn, filePathOut string) {
+func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {
 	in, err := fileSystem.Open(fileNameIn)
 	handleError(err)
 	defer in.Close()
