@@ -7,11 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type fileIoer interface {
+type FileIoer interface {
 	GetOutputFileName(afero.Fs, string) (string, error)
 }
 
-type contactCleaner interface {
+type ContactCleaner interface {
 	ContactClean(afero.Fs, string, string)
 }
 
@@ -23,7 +23,7 @@ func (err CommandError) Error() string {
 	return err.Msg
 }
 
-func RootCmd(fileIo fileIoer, contactClean contactCleaner) (rootCmd *cobra.Command) {
+func RootCmd(fileIo FileIoer, contactClean ContactCleaner) (rootCmd *cobra.Command) {
 	cmd := &cobra.Command{
 		Use:   "cleancontacts <filepath>.vcf",
 		Short: "Clean Contacts removes fields from your phone contacts to prevent apps for having access more than they need.",

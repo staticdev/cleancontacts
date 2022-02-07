@@ -14,11 +14,11 @@ func (FakeFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (strin
 	return "", nil
 }
 
-// type FailingFileIO struct{}
+type FailingFileIO struct{}
 
-// func (FailingFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
-// 	return "", errors.New("some file io error")
-// }
+func (FailingFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
+	return "", cmd.CommandError{"some file io error"}
+}
 
 type FakeClean struct{}
 
@@ -29,25 +29,28 @@ func TestExecute(t *testing.T) {
 		name        string
 		args        []string
 		expectedErr error
+		fileIoer    cmd.FileIoer
 	}{
 		{
-			name: "happy-path",
-			args: []string{"contacts.vcf"},
+			name:     "happy-path",
+			args:     []string{"contacts.vcf"},
+			fileIoer: FakeFileIO{},
 		},
 		{
 			name:        "no-args",
 			expectedErr: cmd.CommandError{Msg: "Contact file argument not provided."},
+			fileIoer:    FakeFileIO{},
 		},
-		// TODO: simulate idiomatically how FileIO should throw an error
-		// {
-		// 	name:        "fileio-error",
-		// 	expectedErr: errors.New("some file io error"),
-		// 	fileIoer:    FailingFileIO{},
-		// },
+		{
+			name:        "fileio-error",
+			args:        []string{"contacts.vcf"},
+			expectedErr: cmd.CommandError{"some file io error"},
+			fileIoer:    FailingFileIO{},
+		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			root := cmd.RootCmd(FakeFileIO{}, FakeClean{})
+			root := cmd.RootCmd(tc.fileIoer, FakeClean{})
 			root.SetArgs(tc.args)
 			err := cmd.Execute(root)
 			if !errors.Is(err, tc.expectedErr) {
