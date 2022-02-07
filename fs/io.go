@@ -13,8 +13,8 @@ type ValidationError struct {
 	Msg string
 }
 
-func (v ValidationError) Error() string {
-	return v.Msg
+func (err ValidationError) Error() string {
+	return err.Msg
 }
 
 type FileIO struct{}

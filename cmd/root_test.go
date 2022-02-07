@@ -14,6 +14,12 @@ func (FakeFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (strin
 	return "", nil
 }
 
+// type FailingFileIO struct{}
+
+// func (FailingFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
+// 	return "", errors.New("some file io error")
+// }
+
 type FakeClean struct{}
 
 func (FakeClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {}
@@ -28,10 +34,15 @@ func TestExecute(t *testing.T) {
 			name: "happy-path",
 			args: []string{"contacts.vcf"},
 		},
-		// TODO: fix this test and add clean error testcase
+		{
+			name:        "no-args",
+			expectedErr: cmd.CommandError{Msg: "Contact file argument not provided."},
+		},
+		// TODO: simulate idiomatically how FileIO should throw an error
 		// {
-		// 	name:        "no-args",
-		// 	expectedErr: errors.New("Contact file argument not provided."),
+		// 	name:        "fileio-error",
+		// 	expectedErr: errors.New("some file io error"),
+		// 	fileIoer:    FailingFileIO{},
 		// },
 	}
 	for _, tc := range testCases {
