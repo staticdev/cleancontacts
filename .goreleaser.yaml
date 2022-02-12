@@ -9,10 +9,16 @@ builds:
 nfpms:
   - maintainer: staticdev <staticdev-support@protonmail.com>
     license: "MIT"
-    description: Cleanup your phone contacts to prevent apps for having access to all details of your contacts.
+    description: |
+      Installer package for Clean Contacts.
+      Clean Contacts is an utility to cleanup VCard contacts to prevent apps for
+      having access to all details of your contacts.
+      It strips e-mail, notes, dates and everything from the contacts, 
+      leaving just the name and phone numbers.
     formats:
     - deb
     - rpm
+    section: misc
 archives:
   - format: zip
     replacements:
