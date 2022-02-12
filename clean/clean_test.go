@@ -1,6 +1,7 @@
 package clean_test
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -13,9 +14,10 @@ var FakeFS = afero.NewMemMapFs()
 
 func TestClean(t *testing.T) {
 	testCases := []struct {
-		name    string
-		contact string
-		want    string
+		name        string
+		contact     string
+		want        string
+		expectedErr error
 	}{
 		{
 			name: "happy-path",
@@ -56,6 +58,12 @@ END:VCARD
 `,
 			want: ``,
 		},
+		{
+			name: "no-end-error",
+			contact: `BEGIN:VCARD
+VERSION:3.0`,
+			expectedErr: clean.CleanError{Msg: "vcard: no END field found"},
+		},
 	}
 	fileNameIn := "dirty-contacts.vcf"
 	filePathOut := "./dirty-contact_cleaned.vcf"
@@ -63,11 +71,14 @@ END:VCARD
 		t.Run(tc.name, func(t *testing.T) {
 			afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0600)
 
-			Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
+			err := Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
 			out, _ := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
 			outStr := strings.Replace(string(out), "\r\n", "\n", -1)
 			if outStr != tc.want {
 				t.Errorf("want (%q), got (%q)", tc.want, outStr)
+			}
+			if !errors.Is(err, tc.expectedErr) {
+				t.Errorf("want (%v) got (%v)", tc.expectedErr, err)
 			}
 		})
 	}

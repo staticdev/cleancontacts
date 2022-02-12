@@ -17,12 +17,20 @@ func (FakeFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (strin
 type FailingFileIO struct{}
 
 func (FailingFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
-	return "", cmd.CommandError{"some file io error"}
+	return "", cmd.CommandError{Msg: "some file io error"}
 }
 
 type FakeClean struct{}
 
-func (FakeClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {}
+func (FakeClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) error {
+	return nil
+}
+
+type FailingClean struct{}
+
+func (FailingClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) error {
+	return cmd.CommandError{Msg: "some clean error"}
+}
 
 func TestExecute(t *testing.T) {
 	testCases := []struct {
@@ -30,27 +38,38 @@ func TestExecute(t *testing.T) {
 		args        []string
 		expectedErr error
 		fileIoer    cmd.FileIoer
+		cleaner     cmd.ContactCleaner
 	}{
 		{
 			name:     "happy-path",
 			args:     []string{"contacts.vcf"},
 			fileIoer: FakeFileIO{},
+			cleaner:  FakeClean{},
 		},
 		{
 			name:        "no-args",
 			expectedErr: cmd.CommandError{Msg: "Contact file argument not provided."},
 			fileIoer:    FakeFileIO{},
+			cleaner:     FakeClean{},
 		},
 		{
 			name:        "fileio-error",
 			args:        []string{"contacts.vcf"},
-			expectedErr: cmd.CommandError{"some file io error"},
+			expectedErr: cmd.CommandError{Msg: "some file io error"},
 			fileIoer:    FailingFileIO{},
+			cleaner:     FakeClean{},
+		},
+		{
+			name:        "clean-error",
+			args:        []string{"contacts.vcf"},
+			expectedErr: cmd.CommandError{Msg: "some clean error"},
+			fileIoer:    FakeFileIO{},
+			cleaner:     FailingClean{},
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			root := cmd.RootCmd(tc.fileIoer, FakeClean{})
+			root := cmd.RootCmd(tc.fileIoer, tc.cleaner)
 			root.SetArgs(tc.args)
 			err := cmd.Execute(root)
 			if !errors.Is(err, tc.expectedErr) {

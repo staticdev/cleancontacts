@@ -12,7 +12,7 @@ type FileIoer interface {
 }
 
 type ContactCleaner interface {
-	ContactClean(afero.Fs, string, string)
+	ContactClean(afero.Fs, string, string) error
 }
 
 type CommandError struct {
@@ -47,7 +47,10 @@ cleancontacts /path/contacts.vcf`,
 			}
 			filePathOut := filepath.Join(dir, fileNameOut)
 
-			contactClean.ContactClean(fsys, fileName, filePathOut)
+			err = contactClean.ContactClean(fsys, fileName, filePathOut)
+			if err != nil {
+				return err
+			}
 			return nil
 		},
 	}

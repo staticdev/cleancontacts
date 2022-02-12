@@ -8,21 +8,31 @@ import (
 	"github.com/spf13/afero"
 )
 
-type Clean struct{}
-
-func handleError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
+type CleanError struct {
+	Msg string
 }
 
-func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {
+func (err CleanError) Error() string {
+	return err.Msg
+}
+
+func handleError(err error, errs []error) []error {
+	if err != nil {
+		return append(errs, CleanError{Msg: err.Error()})
+	}
+	return errs
+}
+
+type Clean struct{}
+
+func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) error {
+	errs := make([]error, 0)
 	in, err := fileSystem.Open(fileNameIn)
-	handleError(err)
+	errs = handleError(err, errs)
 	defer in.Close()
 
 	out, err := fileSystem.Create(filePathOut)
-	handleError(err)
+	errs = handleError(err, errs)
 	defer out.Close()
 
 	dec := vcard.NewDecoder(in)
@@ -32,7 +42,7 @@ func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {
 		if err == io.EOF {
 			break
 		} else {
-			handleError(err)
+			errs = handleError(err, errs)
 		}
 
 		var ns = card.Values("N")
@@ -57,7 +67,11 @@ func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) {
 			cleanCard.AddValue("TEL", tel)
 		}
 		err = enc.Encode(cleanCard)
-		handleError(err)
+		errs = handleError(err, errs)
 		log.Printf("%s exported\n", cleanCard.PreferredValue(vcard.FieldFormattedName))
 	}
+	if len(errs) != 0 {
+		return errs[0]
+	}
+	return nil
 }
