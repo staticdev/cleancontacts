@@ -30,7 +30,7 @@ func RootCmd(fileIo FileIoer, contactClean ContactCleaner) (rootCmd *cobra.Comma
 		Long: `Do not want to share all your contact info to mobile apps? This software is for you!
 
 Export your contacts in VCard format and run the program. BANG! You have a new VCard file with cleaned contacts with just their names and telephones.`,
-		Version: "0.2.2",
+		Version: "0.3.0",
 		Example: `cleancontacts contacts.vcf
 cleancontacts /path/contacts.vcf`,
 		RunE: func(cmd *cobra.Command, args []string) error {
