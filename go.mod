@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/emersion/go-vcard v0.0.0-20210521075357-3445b9171995
-	github.com/spf13/afero v1.8.0
+	github.com/spf13/afero v1.8.1
 	github.com/spf13/cobra v1.3.0
 )
 
