@@ -13,11 +13,11 @@ nfpms:
       Installer package for Clean Contacts.
       Clean Contacts is an utility to cleanup VCard contacts to prevent apps for
       having access to all details of your contacts.
-      It strips e-mail, notes, dates and everything from the contacts, 
+      It strips e-mail, notes, dates and everything from the contacts,
       leaving just the name and phone numbers.
     formats:
-    - deb
-    - rpm
+      - deb
+      - rpm
     section: misc
 archives:
   - format: zip
@@ -28,12 +28,12 @@ archives:
       386: 32
       amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - "^docs:"
+      - "^test:"
