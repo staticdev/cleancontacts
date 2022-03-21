@@ -52,11 +52,11 @@ func TestGetOutputFileName(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		defer func() {
-			FakeFS.Remove("dirty-contacts.vcf")
-			FakeFS.RemoveAll("readme.md")
+			_ = FakeFS.Remove("dirty-contacts.vcf")
+			_ = FakeFS.RemoveAll("readme.md")
 		}()
-		afero.WriteFile(FakeFS, "dirty-contacts.vcf", []byte(""), 0600)
-		afero.WriteFile(FakeFS, "readme.md", []byte(""), 0600)
+		_ = afero.WriteFile(FakeFS, "dirty-contacts.vcf", []byte(""), 0600)
+		_ = afero.WriteFile(FakeFS, "readme.md", []byte(""), 0600)
 
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := FileIO.GetOutputFileName(FakeFS, tc.fileName)
@@ -78,8 +78,8 @@ func TestGetOutputFileNamePermissionDenied(t *testing.T) {
 	folderName := "secret"
 	fileName := "secret/cont.vcf"
 	defer func() {
-		FakeFS.Chmod(folderName, 0700)
-		FakeFS.RemoveAll(folderName)
+		_ = FakeFS.Chmod(folderName, 0700)
+		_ = FakeFS.RemoveAll(folderName)
 	}()
 	err := FakeFS.Mkdir(folderName, 0700) // temporary permission to write
 	if err != nil {
@@ -89,7 +89,7 @@ func TestGetOutputFileNamePermissionDenied(t *testing.T) {
 	if err != nil {
 		t.Errorf("%v", err)
 	}
-	FakeFS.Chmod(folderName, 0000)
+	_ = FakeFS.Chmod(folderName, 0000)
 	if err != nil {
 		t.Errorf("%v", err)
 	}

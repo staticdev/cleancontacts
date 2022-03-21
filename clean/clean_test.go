@@ -69,8 +69,7 @@ VERSION:3.0`,
 	filePathOut := "./dirty-contact_cleaned.vcf"
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0600)
-
+			_ = afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0600)
 			err := Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
 			out, _ := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
 			outStr := strings.Replace(string(out), "\r\n", "\n", -1)

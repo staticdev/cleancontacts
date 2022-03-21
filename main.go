@@ -10,5 +10,5 @@ func main() {
 	fileIo := fs.FileIO{}
 	cleaner := clean.Clean{}
 	command := cmd.RootCmd(fileIo, cleaner)
-	cmd.Execute(command)
+	_ = cmd.Execute(command)
 }
