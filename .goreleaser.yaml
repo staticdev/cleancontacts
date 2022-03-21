@@ -18,6 +18,13 @@ nfpms:
     formats:
       - deb
       - rpm
+    contents:
+      - src: .lintian-overrides
+        dst: ./usr/share/lintian/overrides/cleancontacts
+        packager: deb
+        file_info:
+          mode: 0644
+
     section: misc
 archives:
   - format: zip
