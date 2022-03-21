@@ -3,8 +3,8 @@ package cmd
 import (
 	"path/filepath"
 
-	"github.com/muesli/coral"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 )
 
 type FileIoer interface {
@@ -23,8 +23,8 @@ func (err CommandError) Error() string {
 	return err.Msg
 }
 
-func RootCmd(fileIo FileIoer, contactClean ContactCleaner) (rootCmd *coral.Command) {
-	cmd := &coral.Command{
+func RootCmd(fileIo FileIoer, contactClean ContactCleaner) (rootCmd *cobra.Command) {
+	cmd := &cobra.Command{
 		Use:   "cleancontacts <filepath>.vcf",
 		Short: "Clean Contacts removes fields from your phone contacts to prevent apps for having access more than they need.",
 		Long: `Do not want to share all your contact info to mobile apps? This software is for you!
@@ -33,7 +33,7 @@ Export your contacts in VCard format and run the program. BANG! You have a new V
 		Version: "0.3.0",
 		Example: `cleancontacts contacts.vcf
 cleancontacts /path/contacts.vcf`,
-		RunE: func(cmd *coral.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return CommandError{Msg: "Contact file argument not provided."}
 			}
@@ -57,6 +57,6 @@ cleancontacts /path/contacts.vcf`,
 	return cmd
 }
 
-func Execute(cmd *coral.Command) error {
+func Execute(cmd *cobra.Command) error {
 	return cmd.Execute()
 }
