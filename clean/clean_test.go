@@ -9,8 +9,10 @@ import (
 	"github.com/staticdev/cleancontacts/clean"
 )
 
-var Clean = clean.Clean{}
-var FakeFS = afero.NewMemMapFs()
+var (
+	Clean  = clean.Clean{}
+	FakeFS = afero.NewMemMapFs()
+)
 
 func TestClean(t *testing.T) {
 	testCases := []struct {
@@ -62,14 +64,14 @@ END:VCARD
 			name: "no-end-error",
 			contact: `BEGIN:VCARD
 VERSION:3.0`,
-			expectedErr: clean.CleanError{Msg: "vcard: no END field found"},
+			expectedErr: clean.CleanerError{Msg: "vcard: no END field found"},
 		},
 	}
 	fileNameIn := "dirty-contacts.vcf"
 	filePathOut := "./dirty-contact_cleaned.vcf"
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			_ = afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0600)
+			afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0o600) // nolint: errcheck
 			err := Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
 			out, _ := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
 			outStr := strings.Replace(string(out), "\r\n", "\n", -1)
