@@ -1,0 +1,55 @@
+---
+version: "3"
+
+tasks:
+  setup:
+    desc: Install dependencies
+    cmds:
+      - go mod tidy
+
+  build:
+    desc: Build the binary
+    sources:
+      - ./**/*.go
+    generates:
+      - ./goreleaser
+    cmds:
+      - go build
+
+  test:
+    desc: Run tests
+    env:
+      LC_ALL: C
+    vars:
+      TEST_OPTIONS: '{{default "" .TEST_OPTIONS}}'
+      SOURCE_FILES: '{{default "./..." .SOURCE_FILES}}'
+      TEST_PATTERN: '{{default "." .TEST_PATTERN}}'
+    cmds:
+      - go test ./... -failfast -race -coverprofile=coverage.out -covermode=atomic
+
+  cover:
+    desc: Open the cover tool
+    cmds:
+      - go tool cover -html=coverage.txt
+
+  fmt:
+    desc: gofumpt all code
+    cmds:
+      - gofumpt -w -l .
+
+  lint:
+    desc: Lint the code with golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
+  ci:
+    desc: Run all CI steps
+    cmds:
+      - task: setup
+      - task: build
+      - task: test
+
+  default:
+    desc: Runs the default tasks
+    cmds:
+      - task: ci

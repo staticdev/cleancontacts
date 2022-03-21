@@ -6,6 +6,30 @@ name: Tests
   - pull_request
 
 jobs:
+  lint:
+    permissions:
+      contents: read
+      pull-requests: read
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3.1.0
+        with:
+          version: v1.45.0
+          args: --timeout=3m
+          skip-go-installation: true
+
   tests:
     name: tests ${{ matrix.go }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -46,7 +70,7 @@ jobs:
           go-version: "1.18"
 
       - name: Run coverage
-        run: go test ./... -race -coverprofile=coverage.out -covermode=atomic
+        run: go test ./... -failfast -race -coverprofile=coverage.out -covermode=atomic
 
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)

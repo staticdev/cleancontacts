@@ -8,17 +8,17 @@ import (
 	"github.com/spf13/afero"
 )
 
-type CleanError struct {
+type CleanerError struct {
 	Msg string
 }
 
-func (err CleanError) Error() string {
+func (err CleanerError) Error() string {
 	return err.Msg
 }
 
 func handleError(err error, errs []error) []error {
 	if err != nil {
-		return append(errs, CleanError{Msg: err.Error()})
+		return append(errs, CleanerError{Msg: err.Error()})
 	}
 	return errs
 }
@@ -44,15 +44,15 @@ func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) e
 		} else {
 			errs = handleError(err, errs)
 		}
+		ns := card.Values("N")
+		tels := card.Values("TEL")
 
-		var ns = card.Values("N")
-		var tels = card.Values("TEL")
 		// skip contacts with no name or tel
 		if len(ns) == 0 || len(tels) == 0 {
 			continue
 		}
-		var versions = card.Values("VERSION")
-		var fns = card.Values("FN")
+		versions := card.Values("VERSION")
+		fns := card.Values("FN")
 		var cleanCard vcard.Card = make(vcard.Card)
 		for _, version := range versions {
 			cleanCard.AddValue("VERSION", version)

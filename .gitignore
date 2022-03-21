@@ -2,7 +2,8 @@ cleancontacts
 coverage*
 *.vcf
 
-# Visual Studio Code
+.idea
+.task
 .vscode/
 
 dist/

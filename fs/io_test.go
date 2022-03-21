@@ -24,8 +24,10 @@ import (
 // See issue: https://github.com/spf13/afero/issues/335
 // var FakeFS = afero.NewMemMapFs()
 
-var FileIO = fs.FileIO{}
-var FakeFS = afero.NewOsFs()
+var (
+	FileIO = fs.FileIO{}
+	FakeFS = afero.NewOsFs()
+)
 
 func TestGetOutputFileName(t *testing.T) {
 	testCases := []struct {
@@ -50,13 +52,14 @@ func TestGetOutputFileName(t *testing.T) {
 			expectedErr: fs.ValidationError{Msg: "Extension \".md\" not accepted, please use a \".vcf\" file."},
 		},
 	}
+
 	for _, tc := range testCases {
 		defer func() {
-			FakeFS.Remove("dirty-contacts.vcf")
-			FakeFS.RemoveAll("readme.md")
+			FakeFS.Remove("dirty-contacts.vcf") // nolint: errcheck
+			FakeFS.RemoveAll("readme.md")       // nolint: errcheck
 		}()
-		afero.WriteFile(FakeFS, "dirty-contacts.vcf", []byte(""), 0600)
-		afero.WriteFile(FakeFS, "readme.md", []byte(""), 0600)
+		afero.WriteFile(FakeFS, "dirty-contacts.vcf", []byte(""), 0o600) // nolint: errcheck
+		afero.WriteFile(FakeFS, "readme.md", []byte(""), 0o600)          // nolint: errcheck
 
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := FileIO.GetOutputFileName(FakeFS, tc.fileName)
@@ -78,18 +81,18 @@ func TestGetOutputFileNamePermissionDenied(t *testing.T) {
 	folderName := "secret"
 	fileName := "secret/cont.vcf"
 	defer func() {
-		FakeFS.Chmod(folderName, 0700)
-		FakeFS.RemoveAll(folderName)
+		FakeFS.Chmod(folderName, 0o700) // nolint: errcheck
+		FakeFS.RemoveAll(folderName)    // nolint: errcheck
 	}()
-	err := FakeFS.Mkdir(folderName, 0700) // temporary permission to write
+	err := FakeFS.Mkdir(folderName, 0o700) // temporary permission to write
 	if err != nil {
 		t.Errorf("%v", err)
 	}
-	err = afero.WriteFile(FakeFS, fileName, []byte(""), 0700)
+	err = afero.WriteFile(FakeFS, fileName, []byte(""), 0o700)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
-	FakeFS.Chmod(folderName, 0000)
+	FakeFS.Chmod(folderName, 0o000) // nolint: errcheck
 	if err != nil {
 		t.Errorf("%v", err)
 	}
