@@ -41,9 +41,8 @@ func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) e
 		card, err := dec.Decode()
 		if err == io.EOF {
 			break
-		} else {
-			errs = handleError(err, errs)
 		}
+		errs = handleError(err, errs)
 		ns := card.Values("N")
 		tels := card.Values("TEL")
 

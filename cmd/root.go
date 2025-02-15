@@ -33,7 +33,7 @@ Export your contacts in VCard format and run the program. BANG! You have a new V
 		Version: "0.3.0",
 		Example: `cleancontacts contacts.vcf
 cleancontacts /path/contacts.vcf`,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return CommandError{Msg: "Contact file argument not provided."}
 			}
