@@ -7,7 +7,7 @@
 Prerequisites:
 
 - [Task](https://taskfile.dev/#/installation)
-- [Go 1.18+](https://golang.org/doc/install)
+- [Go 1.21+](https://golang.org/doc/install)
 
 Clone `cleancontacts`:
 
