@@ -28,12 +28,6 @@ nfpms:
     section: misc
 archives:
   - format: zip
-    replacements:
-      darwin: Mac
-      linux: Linux
-      windows: Windows
-      386: 32
-      amd64: x86_64
 checksum:
   name_template: "checksums.txt"
 snapshot:
