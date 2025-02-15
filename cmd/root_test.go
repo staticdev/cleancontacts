@@ -10,25 +10,25 @@ import (
 
 type FakeFileIO struct{}
 
-func (FakeFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
+func (FakeFileIO) GetOutputFileName(_ afero.Fs, _ string) (string, error) {
 	return "", nil
 }
 
 type FailingFileIO struct{}
 
-func (FailingFileIO) GetOutputFileName(fileSystem afero.Fs, fileName string) (string, error) {
+func (FailingFileIO) GetOutputFileName(_ afero.Fs, _ string) (string, error) {
 	return "", cmd.CommandError{Msg: "some file io error"}
 }
 
 type FakeClean struct{}
 
-func (FakeClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) error {
+func (FakeClean) ContactClean(_ afero.Fs, _, _ string) error {
 	return nil
 }
 
 type FailingClean struct{}
 
-func (FailingClean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) error {
+func (FailingClean) ContactClean(_ afero.Fs, _, _ string) error {
 	return cmd.CommandError{Msg: "some clean error"}
 }
 
