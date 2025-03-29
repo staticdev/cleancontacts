@@ -1,8 +1,8 @@
 module github.com/staticdev/cleancontacts
 
-go 1.22
+go 1.23
 
-toolchain go1.22.9
+toolchain go1.23.9
 
 require (
 	github.com/emersion/go-vcard v0.0.0-20210521075357-3445b9171995
