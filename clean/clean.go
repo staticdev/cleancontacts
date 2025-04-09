@@ -52,7 +52,7 @@ func (Clean) ContactClean(fileSystem afero.Fs, fileNameIn, filePathOut string) e
 		}
 		versions := card.Values("VERSION")
 		fns := card.Values("FN")
-		var cleanCard vcard.Card = make(vcard.Card)
+		cleanCard := make(vcard.Card)
 		for _, version := range versions {
 			cleanCard.AddValue("VERSION", version)
 		}
