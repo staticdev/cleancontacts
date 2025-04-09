@@ -74,7 +74,7 @@ VERSION:3.0`,
 			afero.WriteFile(FakeFS, fileNameIn, []byte(tc.contact), 0o600) // nolint: errcheck
 			err := Clean.ContactClean(FakeFS, fileNameIn, filePathOut)
 			out, _ := afero.ReadFile(FakeFS, "dirty-contact_cleaned.vcf")
-			outStr := strings.Replace(string(out), "\r\n", "\n", -1)
+			outStr := strings.ReplaceAll(string(out), "\r\n", "\n")
 			if outStr != tc.want {
 				t.Errorf("want (%q), got (%q)", tc.want, outStr)
 			}
