@@ -1,0 +1,15 @@
+---
+extends: default
+
+rules:
+  brackets: {max-spaces-inside: 1, level: error}
+  line-length:
+    max: 80
+    level: warning
+  document-start:
+    level: error
+  truthy:
+    level: error
+
+ignore: |
+  /.devenv/
