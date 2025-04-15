@@ -2,12 +2,22 @@
 name: Tests
 
 "on":
-  - push
+  pull_request:
+  push:
+    branches: [main]
 
 env:
   GOLANGCI_LINT_VERSION: v2.0
 
 jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: pre-commit/action@v3.0.1
+
   lint:
     permissions:
       contents: read
@@ -37,9 +47,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { go: "1.23", os: "ubuntu-latest" }
-          - { go: "1.23", os: "macos-latest" }
-          - { go: "1.23", os: "windows-latest" }
+          - {go: "1.23", os: "ubuntu-latest"}
+          - {go: "1.23", os: "macos-latest"}
+          - {go: "1.23", os: "windows-latest"}
 
     steps:
       - name: Check out the repository
