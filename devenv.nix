@@ -45,10 +45,16 @@ in
   enterTest = ''
     echo "Running tests"
     git --version | grep --color=auto "${pkgs.git.version}"
+    go test -v ./...
   '';
 
   # https://devenv.sh/pre-commit-hooks/
-  # pre-commit.hooks.shellcheck.enable = true;
+  git-hooks.hooks = {
+    trim-trailing-whitespace.enable = true;
+    end-of-file-fixer.enable = true;
+    check-added-large-files.enable = true;
+    check-yaml.enable = true;
+  };
 
   # See full reference at https://devenv.sh/reference/options/
   cachix.enable = false;
