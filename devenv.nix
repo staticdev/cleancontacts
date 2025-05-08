@@ -11,6 +11,7 @@ in
   packages = [
     pkgs.git
     pkgs.go_1_23
+    pkgs.go-task
     pkgs-unstable.golangci-lint
     pkgs.goreleaser
   ];
@@ -50,4 +51,5 @@ in
   # pre-commit.hooks.shellcheck.enable = true;
 
   # See full reference at https://devenv.sh/reference/options/
+  cachix.enable = false;
 }
