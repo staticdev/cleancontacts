@@ -7,7 +7,7 @@ name: Tests
     branches: [main]
 
 env:
-  GOLANGCI_LINT_VERSION: v2.0
+  GOLANGCI_LINT_VERSION: v2.1
 
 jobs:
   pre-commit:

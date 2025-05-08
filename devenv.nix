@@ -11,6 +11,7 @@ in
   packages = [
     pkgs.git
     pkgs.go_1_23
+    pkgs.go-task
     pkgs-unstable.golangci-lint
     pkgs.goreleaser
   ];
