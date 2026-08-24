@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.24.1
 
 require (
-	github.com/emersion/go-vcard v0.0.0-20210521075357-3445b9171995
+	github.com/emersion/go-vcard v0.1.0
 	github.com/spf13/afero v1.15.0
 	github.com/spf13/cobra v1.10.2
 )
